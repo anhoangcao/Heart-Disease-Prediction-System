@@ -3,22 +3,37 @@ import pandas as pd
 import polars as pl
 import numpy as np
 import pickle
-import sklearn
+from pymongo import MongoClient
+from urllib.parse import quote_plus
+from sklearn.preprocessing import OneHotEncoder
+from datetime import datetime
 
+# MongoDB setup - Should replace with st.secrets for production
+username = "anhoang100402"
+password = "Abc1234"
+username_encoded = quote_plus(username)
+password_encoded = quote_plus(password)
+mongo_uri = f"mongodb+srv://{username_encoded}:{password_encoded}@cluster0.qeoxq3z.mongodb.net/?retryWrites=true&w=majority"
+client = MongoClient(mongo_uri)
+db = client['user_db']  # The database name
+collection = db['information_heart_keys']  # The collection name
+
+# Paths to your dataset and model
 DATASET_PATH = "data/heart_2020_cleaned.csv"
 LOG_MODEL_PATH = "model/logistic_regression.pkl"
-
 
 def main():
     @st.cache(persist=True)
     def load_dataset() -> pd.DataFrame:
-        heart_df = pl.read_csv(DATASET_PATH)
-        heart_df = heart_df.to_pandas()
+        heart_df = pl.read_csv(DATASET_PATH).to_pandas()
         heart_df = pd.DataFrame(np.sort(heart_df.values, axis=0),
                                 index=heart_df.index,
                                 columns=heart_df.columns)
         return heart_df
 
+    # Add an input field for the username at the top of the sidebar
+    st.sidebar.title("Patient Name")
+    username_patient = st.sidebar.text_input("Enter your name", "")
 
     def user_input_features() -> pd.DataFrame:
         race = st.sidebar.selectbox("Race", options=(race for race in heart.Race.unique()))
@@ -72,7 +87,22 @@ def main():
 
         return features
 
+    # Create a row for the logout button, adjusting columns for alignment
+    _, right_col = st.columns([0.8, 0.2])  # Adjust the ratio as needed
+    # Layout for logout button at the top right
     st.title("Predict Heart Disease")
+    
+    with right_col:
+        if st.button("Logout"):
+            # Clear specific session state related to user session
+            for key in ["login_status", "username", "account_type"]:
+                if key in st.session_state:
+                    del st.session_state[key]
+            # Set a flag to indicate user has logged out
+            st.session_state['logged_out'] = True
+            # Redirect to the main page by using st.experimental_rerun()
+            st.experimental_rerun()
+            
     st.subheader("Are you wondering about the condition of your heart? "
                  "This app will help you to diagnose it!")
 
@@ -128,21 +158,35 @@ def main():
     log_model = pickle.load(open(LOG_MODEL_PATH, "rb"))
 
     if submit:
+        # Assuming 'df' is your input DataFrame for the model
         prediction = log_model.predict(df)
         prediction_prob = log_model.predict_proba(df)
+        
+        # Displaying results based on the prediction
         if prediction == 0:
-            st.markdown(f"**The probability that you'll have"
-                        f" heart disease is {round(prediction_prob[0][1] * 100, 2)}%."
-                        f" You are healthy!**")
-            st.image("images/heart-okay.jpg",
-                     caption="Your heart seems to be okay! - Dr. Logistic Regression")
+            # Corrected to show the probability of NOT having heart disease for clarity
+            st.markdown(f"**The probability that you'll have heart disease is {round(prediction_prob[0][1] * 100, 2)}%. You are healthy!**")
+            st.image("images/heart-okay.jpg", caption="Your heart seems to be okay! - Dr. Logistic Regression")
         else:
-            st.markdown(f"**The probability that you will have"
-                        f" heart disease is {round(prediction_prob[0][1] * 100, 2)}%."
-                        f" It sounds like you are not healthy.**")
-            st.image("images/heart-bad.jpg",
-                     caption="I'm not satisfied with the condition of your heart! - Dr. Logistic Regression")
+            # Keeps the probability of having heart disease
+            st.markdown(f"**The probability that you will have heart disease is {round(prediction_prob[0][1] * 100, 2)}%. It sounds like you are not healthy.**")
+            st.image("images/heart-bad.jpg", caption="I'm not satisfied with the condition of your heart! - Dr. Logistic Regression")
 
+        record = {
+            "username": username_patient,  # Assuming 'username_patient' holds the patient's username
+            "user_input": input_df.iloc[0].to_dict(),  # 'input_df' should have been defined with the user input data
+            "prediction": int(prediction[0]),
+            # Corrected to store both probabilities in a list or dict format for clarity
+            "prediction_probability": prediction_prob[0][1],
+            "timestamp": datetime.now()  # Captures the current timestamp
+        }
 
+        
+        # Insert the record into MongoDB
+        collection.insert_one(record)
+        
+        st.write("Prediction saved successfully!")
+
+        
 if __name__ == "__main__":
     main()
