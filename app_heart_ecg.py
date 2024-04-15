@@ -42,65 +42,90 @@ classes = {
     3: 'Normal Heart'
 }
 
-st.title("ECG Image Classifier")
+def preprocess_image(image, target_size=(224, 224)):
+    if image.mode != "RGB":
+        image = image.convert("RGB")
+    image = image.resize(target_size)
+    image = np.array(image)
+    image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)  # Convert to grayscale
+    image = np.expand_dims(image, axis=0)
+    return image
 
-st.write("This application classifies ECG images into four categories based on the condition of the heart.")
+def main():
+    st.title("Classification of ECG images for heart disease")
+    st.subheader("This application is designed to help you accurately diagnose your heart disease condition through ECG images. Just upload the image file (.jpg, .png) of your heart disease ECG and they I will analyze that file to determine what type of heart disease your ECG image has.")
 
-# User information inputs
-name = st.text_input("Patient Name:")
-gender = st.selectbox("Gender:", ["Male", "Female", "Other"])
-age = st.number_input("Age:", min_value=0, max_value=120, step=1)
+    col1, col2 = st.columns([1, 3])
+    with col1:
+        st.image("images/doctor.png",
+                    caption="I will help you diagnose your heart health! - 2D Convolutional Neural Network",
+                    width=150)
+    with col2:
+        st.markdown("""
+        Here are the 4 main types of heart disease you need to know about:
+                
+        1. Myocardial Infarction: Myocardial infarction.
+        2. Abnormal Heart Beat: Abnormal heart beat.
+        3. Have a History of Myocardial Infraction: Have a history of myocardial infarction.
+        4. Normal Heart: Normal heart.
 
-uploaded_file = st.file_uploader("Choose an ECG image...", type=["jpg", "png"])
-if uploaded_file is not None:
-    image = Image.open(uploaded_file)
-    st.image(image, caption='Uploaded ECG Image.', use_column_width=True)
-    st.write("")
+        To start diagnosing, simply follow these steps:
+        1. Fill in the necessary personal information.
+        2. Click the "Browse Files" button to upload your image file and wait for the analysis results.
+                
+        **Use this app to gain a deeper understanding of your heart health.**
+            
+        """)
 
-    def preprocess_image(image, target_size=(224, 224)):
-        if image.mode != "RGB":
-            image = image.convert("RGB")
-        image = image.resize(target_size)
-        image = np.array(image)
-        image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)  # Convert to grayscale
-        image = np.expand_dims(image, axis=0)
-        return image
+    # User information inputs
+    name = st.text_input("Patient Name:")
+    gender = st.selectbox("Gender:", ["Male", "Female", "Other"])
+    age = st.number_input("Age:", min_value=0, max_value=120, step=1)
 
-    image = preprocess_image(image)
+    uploaded_file = st.file_uploader("Choose an ECG image...", type=["jpg", "png"])
+    if uploaded_file is not None:
+        image = Image.open(uploaded_file)
+        st.image(image, caption='Uploaded ECG Image.', use_column_width=True)
+        st.write("")
 
-    # Make prediction
-    predictions = model.predict(image)
-    predicted_class = np.argmax(predictions, axis=1)[0]
-    confidence = np.max(tf.nn.softmax(predictions[0])) * 100
+        image = preprocess_image(image)
 
-    # Convert NumPy types to Python native types for MongoDB
-    predicted_class_python = int(predicted_class)  # Convert to Python int
-    confidence_python = float(confidence)  # Ensure confidence is a Python float
+        # Make prediction
+        predictions = model.predict(image)
+        predicted_class = np.argmax(predictions, axis=1)[0]
+        confidence = np.max(tf.nn.softmax(predictions[0])) * 100
 
-    # Get the class name instead of the class index
-    predicted_class_name = classes[predicted_class_python]
+        # Convert NumPy types to Python native types for MongoDB
+        predicted_class_python = int(predicted_class)  # Convert to Python int
+        confidence_python = float(confidence)  # Ensure confidence is a Python float
 
-    # Prepare data to save
-    data_to_save = {
-        "patient_name": name,
-        "gender": gender,
-        "age": age,
-        "prediction": predicted_class_name,  # Save class name instead of index
-        "confidence": confidence_python,
-        "timestamp": datetime.now()
-    }
+        # Get the class name instead of the class index
+        predicted_class_name = classes[predicted_class_python]
 
-    # Save data to MongoDB
-    save_to_mongodb(data_to_save)
+        # Prepare data to save
+        data_to_save = {
+            "patient_name": name,
+            "gender": gender,
+            "age": age,
+            "prediction": predicted_class_name,  # Save class name instead of index
+            "confidence": confidence_python,
+            "timestamp": datetime.now()
+        }
 
-    # Display user information (optional)
-    st.write("========================================================================================")
-    st.write("Patient Information and Result Prediction:")
-    st.write(f"Patient name: {name}")
-    st.write(f"Gender: {gender}")
-    st.write(f"Age: {age}")
+        # Save data to MongoDB
+        save_to_mongodb(data_to_save)
 
-    # Display the prediction
-    st.write("Type of Heart Disease:")
-    st.success(f"{classes[predicted_class]}")
-    st.write(f"Prediction Probability: {confidence:.2f}%")
+        # Display user information (optional)
+        st.write("========================================================================================")
+        st.write("Patient Information and Result Prediction:")
+        st.write(f"Patient name: {name}")
+        st.write(f"Gender: {gender}")
+        st.write(f"Age: {age}")
+
+        # Display the prediction
+        st.write("Type of Heart Disease:")
+        st.success(f"{classes[predicted_class]}")
+        st.write(f"Prediction Probability: {confidence:.2f}%")
+
+if __name__ == "__main__":
+    main()
