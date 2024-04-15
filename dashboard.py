@@ -15,6 +15,7 @@ client = MongoClient(mongo_uri)
 db = client['user_db']  # Use the same database name as in app_main.py
 collection_heart_keys = db['information_heart_keys']
 collection_heart_sounds = db['information_heart_sounds']
+collection_heart_ecgs = db['information_heart_ecgs']
 
 # Function to fetch data from MongoDB
 def fetch_users(account_type):
@@ -32,6 +33,11 @@ def fetch_heart_sound_data():
     collection_heart_sounds = db['information_heart_sounds']  # Adjust collection name accordingly
     records_sounds = list(collection_heart_sounds.find({}))
     return records_sounds
+
+def fetch_heart_ecg_data():
+    collection_heart_ecgs = db['information_heart_ecgs']  # Adjust collection name accordingly
+    records_ecgs = list(collection_heart_ecgs.find({}))
+    return records_ecgs
 
 def display_users(account_type):
     users = fetch_users(account_type)
@@ -189,6 +195,54 @@ def display_heart_sound_data():
     else:
         st.write("No records found.")
 
+
+
+records_ecgs = fetch_heart_ecg_data()  # Sử dụng hàm đã định nghĩa trước đó để lấy dữ liệu
+
+def delete_records_ecgs_by_id(record_id):
+    collection_heart_ecgs = db['information_heart_ecgs']
+    # Chuyển đổi record_id từ chuỗi sang ObjectId nếu cần
+    result = collection_heart_ecgs.delete_one({'_id': ObjectId(record_id)})
+    if result.deleted_count > 0:
+        st.success(f"Record with ID {record_id} has been deleted.")
+    else:
+        st.error("Failed to delete record.")
+
+def display_heart_ecg_data():
+    if records_ecgs:
+        # Tạo tiêu đề cho dữ liệu được hiển thị
+        header_cols = st.columns([1, 2.5, 2, 1.5, 3, 2.6, 2.2, 2])  # Điều chỉnh để bao gồm cột STT và datetime một cách chính xác
+        header_cols[0].write("STT")  # STT
+        header_cols[1].write("Patient name")
+        header_cols[2].write("Gender")
+        header_cols[3].write("Age")
+        header_cols[4].write("ECG heart disease")
+        header_cols[5].write("Probability (%)")
+        header_cols[6].write("Date time")
+        header_cols[7].write("Action")
+
+        for index, record in enumerate(records_ecgs, start=1):
+            cols = st.columns([1, 2.5, 2, 1.5, 3, 2.6, 2.2, 2])  # Phù hợp với layout đã được điều chỉnh
+            cols[0].write(index)  # Hiển thị số thứ tự
+            # Giả định 'patient_name' hoặc một key tương tự để hiển thị tên bệnh nhân
+            cols[1].write(record.get('patient_name', 'N/A'))
+            # Hiển thị 'gender' dưới dạng text hoặc JSON, tùy thuộc vào sở thích của bạn
+            cols[2].write(record['gender'])
+            cols[3].write(f"{record['age']}")
+            cols[4].write(record['prediction'])
+            cols[5].write(f"{record['confidence'] * 1:.2f}%")
+            # Định dạng ngày giờ như mong muốn
+            datetime_str = record.get('timestamp', 'Not available').strftime('%Y-%m-%d %H:%M:%S') if 'timestamp' in record else 'Not available'
+            cols[6].write(datetime_str)
+            # Giả sử `_id` được lưu trữ trong `record`
+            delete_button_key = f"delete_{record['_id']}"  # Tạo khóa duy nhất dựa trên _id
+            if cols[7].button("Delete", key=delete_button_key):
+                delete_records_ecgs_by_id(str(record['_id']))  # Chuyển đổi thành chuỗi nếu cần
+                st.experimental_rerun()
+    # Dừng vòng lặp để tránh re-render lỗi
+    else:
+        st.write("No records found.")
+
 # Page configuration and layout
 st.set_page_config(page_title="Dashboard", page_icon="📊", layout="wide")
 st.sidebar.title("Categories")
@@ -213,7 +267,7 @@ elif selected_category == "Patient management":
     with tab1:
         display_heart_key_data()
     with tab2:
-        st.write("ECG")
+        display_heart_ecg_data()
     with tab3:
         display_heart_sound_data()
 

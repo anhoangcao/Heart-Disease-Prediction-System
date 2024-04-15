@@ -110,7 +110,7 @@ def main():
 
     with col1:
         st.image("images/doctor.png",
-                 caption="I'll help you diagnose your heart health! - Dr. Logistic Regression",
+                 caption="I'll help you diagnose your heart health! - Dr. Voting Classifier",
                  width=150)
         submit = st.button("Predict")
     with col2:
@@ -119,7 +119,7 @@ def main():
         predict heart disease pretty accurately? In this app, you can
         estimate your chance of heart disease (yes/no) in seconds!
         
-        Here, a logistic regression model using an underselling technique
+        Here, a Voting Classifier model using an underselling technique
         was constructed using survey data of over 300k US residents from the year 2020.
         This application is based on it because it has proven to be better than the random forest
         (it achieves an accuracy of about 80%, which is quite good).
@@ -165,12 +165,14 @@ def main():
         # Displaying results based on the prediction
         if prediction == 0:
             # Corrected to show the probability of NOT having heart disease for clarity
+            st.success(f"Predicted Results: No Heart Disease")
             st.markdown(f"**The probability that you'll have heart disease is {round(prediction_prob[0][1] * 100, 2)}%. You are healthy!**")
-            st.image("images/heart-okay.jpg", caption="Your heart seems to be okay! - Dr. Logistic Regression")
+            st.image("images/heart-okay.jpg", caption="Your heart seems to be okay! - Dr. Voting Classifier")
         else:
             # Keeps the probability of having heart disease
+            st.success(f"Predicted Results: Heart Disease")
             st.markdown(f"**The probability that you will have heart disease is {round(prediction_prob[0][1] * 100, 2)}%. It sounds like you are not healthy.**")
-            st.image("images/heart-bad.jpg", caption="I'm not satisfied with the condition of your heart! - Dr. Logistic Regression")
+            st.image("images/heart-bad.jpg", caption="I'm not satisfied with the condition of your heart! - Dr. Voting Classifier")
 
         record = {
             "username": username_patient,  # Assuming 'username_patient' holds the patient's username

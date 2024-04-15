@@ -54,19 +54,21 @@ def display_spectrogram(audio, sr):
     plt.figure(figsize=(10, 4))
     stft = librosa.stft(audio)
     stft_db = librosa.amplitude_to_db(abs(stft))
-    librosa.display.specshow(stft_db, sr=sr, x_axis='time', y_axis='hz')
+    librosa.display.specshow(stft_db, sr=sr, x_axis='time', y_axis='hz', cmap='Blues')
     plt.colorbar(format="%+2.0f dB")
     plt.title('Spectrogram')
     st.pyplot(plt)
+
 
 def display_mfccs(audio, sr):
     """Display MFCCs."""
     plt.figure(figsize=(10, 4))
     mfccs = librosa.feature.mfcc(y=audio, sr=sr, n_mfcc=20)
-    librosa.display.specshow(mfccs, sr=sr, x_axis='time')
+    librosa.display.specshow(mfccs, sr=sr, x_axis='time', cmap='Blues')
     plt.colorbar()
     plt.title('MFCCs')
     st.pyplot(plt)
+
 
 def main():
     st.title("Classification of Heartbeat Sounds")
@@ -75,7 +77,7 @@ def main():
     col1, col2 = st.columns([1, 3])
     with col1:
         st.image("images/doctor.png",
-                 caption="I'll help you diagnose your heart health! - Dr. Convolutional Neural Network",
+                 caption="I'll help you diagnose your heart health! - Dr. Long Short Term Memory",
                  width=150)
     with col2:
         st.markdown("""
@@ -109,6 +111,13 @@ def main():
         audio, sr = librosa.load(audio_file, sr=SR, duration=DURATION)
         if librosa.get_duration(y=audio, sr=sr) < DURATION:
             audio = librosa.util.fix_length(audio, size=SR * DURATION)
+
+        st.write("========================================================================================")
+        st.write("Patient Information and Result Prediction:")
+        st.write(f"Patient name: {patient_name}")
+        st.write(f"Gender: {gender}")
+        st.write(f"Age: {age}")
+        st.write(f"Audio signal charts:")
 
         # Display audio features separately
         display_waveform(audio, sr)
@@ -144,7 +153,8 @@ def main():
         # Save data to MongoDB
         save_to_mongodb(data_to_save)
 
-        st.success(f"Type of Heart Disease: {predicted_label}")
+        st.write("Type of Heart Disease:")
+        st.success(f"{predicted_label}")
         st.write(f"Classification Probability: {confidence}")
 
 if __name__ == "__main__":
