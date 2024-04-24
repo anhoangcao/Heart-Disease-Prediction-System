@@ -37,6 +37,8 @@ def display_waveform(audio, sr):
     plt.figure(figsize=(10, 4))
     librosa.display.waveshow(audio, sr=sr)
     plt.title('Waveform')
+    plt.xlabel('Time (s)')  # Thêm tiêu đề trục hoành
+    plt.ylabel('Amplitude')  # Thêm tiêu đề trục tung
     st.pyplot(plt)
 
 def display_spectrum(audio, sr):
@@ -47,7 +49,10 @@ def display_spectrum(audio, sr):
     frequency = np.linspace(0, sr, len(magnitude))
     plt.plot(frequency[:int(len(frequency)/2)], magnitude[:int(len(magnitude)/2)])  # Display only half
     plt.title('Spectrum')
+    plt.xlabel('Frequency (Hz)')  # Thêm tiêu đề trục hoành
+    plt.ylabel('Magnitude')  # Thêm tiêu đề trục tung
     st.pyplot(plt)
+
 
 def display_spectrogram(audio, sr):
     """Display Spectrogram."""
@@ -57,6 +62,7 @@ def display_spectrogram(audio, sr):
     librosa.display.specshow(stft_db, sr=sr, x_axis='time', y_axis='hz', cmap='Blues')
     plt.colorbar(format="%+2.0f dB")
     plt.title('Spectrogram')
+    plt.xlim([0, 8])  # Giới hạn trục thời gian từ 0 đến 8 giây
     st.pyplot(plt)
 
 
@@ -64,14 +70,15 @@ def display_mfccs(audio, sr):
     """Display MFCCs."""
     plt.figure(figsize=(10, 4))
     mfccs = librosa.feature.mfcc(y=audio, sr=sr, n_mfcc=20)
-    librosa.display.specshow(mfccs, sr=sr, x_axis='time', cmap='Blues')
+    librosa.display.specshow(mfccs, sr=sr, x_axis='time', y_axis='hz', cmap='Blues')
     plt.colorbar()
     plt.title('MFCCs')
+    plt.xlim([0, 8])  # Giới hạn trục thời gian từ 0 đến 8 giây
     st.pyplot(plt)
 
 
 def main():
-    st.title("Classification of Heartbeat Sounds")
+    st.title("Diagnose heart disease using heartbeat sounds")
     st.subheader("Want to understand your heart rate better? This application is designed to help you accurately diagnose your heart rate condition. Just upload an audio file (.wav) recording of your heart sounds, and we will analyze it to determine the type of heartbeat you have.")
 
     col1, col2 = st.columns([1, 3])

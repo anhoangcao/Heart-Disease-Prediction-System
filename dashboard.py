@@ -262,7 +262,7 @@ if selected_category == "Account management":
 elif selected_category == "Patient management":
     st.subheader("Patient management")
     # Tabs for different functionalities related to patients
-    tab1, tab2, tab3 = st.tabs(["Predicted by heart disease factors", "Predicted by ECG image", "Classification of heartbeat sounds"])
+    tab1, tab2, tab3 = st.tabs(["Diagnosis is by signs of heart disease", "Diagnosis of heart disease using ECG images", "Diagnose heart disease using heartbeat sounds"])
 
     with tab1:
         display_heart_key_data()

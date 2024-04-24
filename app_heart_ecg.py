@@ -52,7 +52,7 @@ def preprocess_image(image, target_size=(224, 224)):
     return image
 
 def main():
-    st.title("Classification of ECG images for heart disease")
+    st.title("Diagnosis of heart disease using ECG images")
     st.subheader("This application is designed to help you accurately diagnose your heart disease condition through ECG images. Just upload the image file (.jpg, .png) of your heart disease ECG and they I will analyze that file to determine what type of heart disease your ECG image has.")
 
     col1, col2 = st.columns([1, 3])

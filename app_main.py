@@ -5,12 +5,21 @@ import hashlib
 from urllib.parse import quote_plus
 import app_heart_key
 import app_heart_sound
+import app_heart_ecg
 
-# Set page config in the main app only
-st.set_page_config(
-        page_title="Heart Disease Prediction App",
-        page_icon="images/heart-fav.png"
-)
+# # Set page config in the main app only
+# st.set_page_config(
+#         page_title="Heart Disease Prediction App",
+#         page_icon="images/heart-fav.png"
+# )
+
+# # This should be your first Streamlit command
+# st.set_page_config(
+#     page_title="Heart Disease Prediction App",
+#     page_icon="🧡",
+#     layout="wide",
+#     initial_sidebar_state="expanded",
+# )
 
 # Check if logged_out flag is set to True
 if 'logged_out' in st.session_state and st.session_state['logged_out']:
@@ -96,11 +105,11 @@ if st.session_state['login_status']:
     st.title('Heart Condition Prediction')
     if st.session_state['account_type'] == 'Doctor':
         # Doctors can access both tabs
-        tab1, tab2, tab3 = st.tabs(["Predicted by heart disease factors", "Predicted by ECG image", "Classification of heartbeat sounds"])
+        tab1, tab2, tab3 = st.tabs(["Diagnosis is by signs of heart disease", "Diagnosis of heart disease using ECG images", "Diagnose heart disease using heartbeat sounds"])
         with tab1:
             app_heart_key.main()
         with tab2:
-            st.write("ECG")
+            app_heart_ecg.main()
         with tab3:         
             app_heart_sound.main()
     elif st.session_state['account_type'] == 'Patient':

@@ -90,7 +90,7 @@ def main():
     # Create a row for the logout button, adjusting columns for alignment
     _, right_col = st.columns([0.8, 0.2])  # Adjust the ratio as needed
     # Layout for logout button at the top right
-    st.title("Predict Heart Disease")
+    st.title("Diagnosis is by signs of heart disease")
     
     with right_col:
         if st.button("Logout"):
