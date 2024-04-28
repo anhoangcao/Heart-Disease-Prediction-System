@@ -1,17 +1,18 @@
 
 import streamlit as st
+
+# Set the page config as the first command
+st.set_page_config(
+    page_title="Heart Disease Prediction App",
+    page_icon="images/heart-fav.png"
+)
+
 from pymongo import MongoClient
 import hashlib
 from urllib.parse import quote_plus
 import app_heart_key
 import app_heart_sound
 import app_heart_ecg
-
-# # Set page config in the main app only
-# st.set_page_config(
-#         page_title="Heart Disease Prediction App",
-#         page_icon="images/heart-fav.png"
-# )
 
 # # This should be your first Streamlit command
 # st.set_page_config(
