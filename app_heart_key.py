@@ -36,34 +36,31 @@ def main():
     username_patient = st.sidebar.text_input("Enter your name", "")
 
     def user_input_features() -> pd.DataFrame:
-        race = st.sidebar.selectbox("Race", options=(race for race in heart.Race.unique()))
-        sex = st.sidebar.selectbox("Sex", options=(sex for sex in heart.Sex.unique()))
-        age_cat = st.sidebar.selectbox("Age category",
+        race = st.sidebar.selectbox("Chủng tộc", options=(race for race in heart.Race.unique()))
+        sex = st.sidebar.selectbox("Giới tính", options=(sex for sex in heart.Sex.unique()))
+        age_cat = st.sidebar.selectbox("Độ tuổi",
                                        options=(age_cat for age_cat in heart.AgeCategory.unique()))
-        bmi_cat = st.sidebar.selectbox("BMI category",
+        bmi_cat = st.sidebar.selectbox("Chỉ số BMI",
                                        options=(bmi_cat for bmi_cat in heart.BMICategory.unique()))
-        sleep_time = st.sidebar.number_input("How many hours on average do you sleep?", 0, 24, 7)
-        gen_health = st.sidebar.selectbox("How can you define your general health?",
+        sleep_time = st.sidebar.number_input("Trung bình bạn ngủ bao nhiêu giờ?", 0, 24, 7)
+        gen_health = st.sidebar.selectbox("Tình trạng sức khỏe hiện tại của bạn như thế nào?",
                                           options=(gen_health for gen_health in heart.GenHealth.unique()))
-        phys_health = st.sidebar.number_input("For how many days during the past 30 days was"
-                                              " your physical health not good?", 0, 30, 0)
-        ment_health = st.sidebar.number_input("For how many days during the past 30 days was"
-                                              " your mental health not good?", 0, 30, 0)
-        phys_act = st.sidebar.selectbox("Have you played any sports (running, biking, etc.)"
-                                        " in the past month?", options=("No", "Yes"))
-        smoking = st.sidebar.selectbox("Have you smoked at least 100 cigarettes in"
-                                       " your entire life (approx. 5 packs)?)",
+        phys_health = st.sidebar.number_input("Có bao nhiêu ngày trong 30 ngày qua"
+                                              " sức khỏe thể chất của bạn không tốt?", 0, 30, 0)
+        ment_health = st.sidebar.number_input("Có bao nhiêu ngày trong 30 ngày qua"
+                                              " sức khỏe tinh thần của bạn không tốt?", 0, 30, 0)
+        phys_act = st.sidebar.selectbox("Bạn có chơi môn thể thao nào (chạy, đạp xe, v.v.)"
+                                        " trong tháng qua không?", options=("No", "Yes"))
+        smoking = st.sidebar.selectbox("Bạn đã hút ít nhất 100 điếu thuốc trong đời (khoảng 5 gói) chưa",
                                        options=("No", "Yes"))
-        alcohol_drink = st.sidebar.selectbox("Do you have more than 14 drinks of alcohol (men)"
-                                             " or more than 7 (women) in a week?", options=("No", "Yes"))
-        stroke = st.sidebar.selectbox("Did you have a stroke?", options=("No", "Yes"))
-        diff_walk = st.sidebar.selectbox("Do you have serious difficulty walking"
-                                         " or climbing stairs?", options=("No", "Yes"))
-        diabetic = st.sidebar.selectbox("Have you ever had diabetes?",
+        alcohol_drink = st.sidebar.selectbox("Bạn có uống hơn 14 ly rượu (nam) hoặc hơn 7 ly (nữ) trong một tuần không?", options=("No", "Yes"))
+        stroke = st.sidebar.selectbox("Bạn có bị đột quỵ không?", options=("No", "Yes"))
+        diff_walk = st.sidebar.selectbox("Bạn có gặp khó khăn nghiêm trọng khi đi bộ hoặc leo cầu thang không?", options=("No", "Yes"))
+        diabetic = st.sidebar.selectbox("Bạn đã bao giờ mắc bệnh tiểu đường chưa?",
                                         options=(diabetic for diabetic in heart.Diabetic.unique()))
-        asthma = st.sidebar.selectbox("Do you have asthma?", options=("No", "Yes"))
-        kid_dis = st.sidebar.selectbox("Do you have kidney disease?", options=("No", "Yes"))
-        skin_canc = st.sidebar.selectbox("Do you have skin cancer?", options=("No", "Yes"))
+        asthma = st.sidebar.selectbox("Bạn có bị hen suyễn không?", options=("No", "Yes"))
+        kid_dis = st.sidebar.selectbox("Bạn có bị bệnh thận không?", options=("No", "Yes"))
+        skin_canc = st.sidebar.selectbox("Bạn có bị ung thư da không?", options=("No", "Yes"))
 
         features = pd.DataFrame({
             "PhysicalHealth": [phys_health],
@@ -165,13 +162,13 @@ def main():
         # Displaying results based on the prediction
         if prediction == 0:
             # Corrected to show the probability of NOT having heart disease for clarity
-            st.success(f"Predicted Results: No Heart Disease")
-            st.markdown(f"**The probability that you'll have heart disease is {round(prediction_prob[0][1] * 100, 2)}%. You are healthy!**")
+            st.success(f"Kết quả dự đoán: No Heart Disease")
+            st.markdown(f"**Xác suất bạn bị bệnh tim là {round(prediction_prob[0][1] * 100, 2)}%. Bạn khỏe mạnh!**")
             st.image("images/heart-okay.jpg", caption="Your heart seems to be okay! - Dr. Voting Classifier")
         else:
             # Keeps the probability of having heart disease
-            st.success(f"Predicted Results: Heart Disease")
-            st.markdown(f"**The probability that you will have heart disease is {round(prediction_prob[0][1] * 100, 2)}%. It sounds like you are not healthy.**")
+            st.success(f"Kết quả dự đoán: Heart Disease")
+            st.markdown(f"**Xác suất bạn bị bệnh tim là {round(prediction_prob[0][1] * 100, 2)}%. Có vẻ như bạn không được khỏe.**")
             st.image("images/heart-bad.jpg", caption="I'm not satisfied with the condition of your heart! - Dr. Voting Classifier")
 
         record = {
