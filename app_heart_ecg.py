@@ -74,6 +74,11 @@ def main():
         2. Click the "Browse Files" button to upload your image file and wait for the analysis results.
                 
         **Use this app to gain a deeper understanding of your heart health.**
+        
+        **Author: Hoang An ([GitHub](https://github.com/anhoangcao))**
+                    
+        You can see the steps of building the model, evaluating it, and cleaning the data itself
+        on my GitHub repo [here](https://github.com/anhoangcao/Heart-Disease-Prediction-System).
             
         """)
 

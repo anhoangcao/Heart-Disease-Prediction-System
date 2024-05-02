@@ -101,6 +101,11 @@ def main():
         2. Click the "Browse files" button to upload your audio file and wait for the analysis results.
                     
         **Use this app to gain deeper insights into the health of your heart.**
+                    
+        **Author: Hoang An ([GitHub](https://github.com/anhoangcao/))**
+                    
+        You can see the steps of building the model, evaluating it, and cleaning the data itself
+        on my GitHub repo [here](https://github.com/anhoangcao/Heart-Disease-Prediction-System).
               
         """)
 
