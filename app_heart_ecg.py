@@ -64,10 +64,10 @@ def main():
         st.markdown("""
         Here are the 4 main types of heart disease you need to know about:
                 
-        1. Myocardial Infarction: Myocardial infarction.
-        2. Abnormal Heart Beat: Abnormal heart beat.
-        3. Have a History of Myocardial Infraction: Have a history of myocardial infarction.
-        4. Normal Heart: Normal heart.
+        1. Myocardial Infarction: Nhồi máu cơ tim.
+        2. Abnormal Heart Beat: Tim đập bất thường.
+        3. Have a History of Myocardial Infraction: Có tiền sử nhồi máu cơ tim.
+        4. Normal Heart: Tim bình thường.
 
         To start diagnosing, simply follow these steps:
         1. Fill in the necessary personal information.

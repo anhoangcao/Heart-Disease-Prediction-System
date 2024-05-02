@@ -90,11 +90,11 @@ def main():
         st.markdown("""
         Here are the 5 main heart sounds you need to know:
                     
-        1. Artifact: Artifact sounds reflect disturbances not directly related to the heart's function, including noise from the surrounding environment or recording devices.
-        2. Extra Heart Sounds (extrahls): Additional heart sounds, like "lub-lub dub" or "lub dub-dub," may indicate normality or abnormality depending on the specific context.
-        3. Extrasystole: Extrasystole, a sign of abnormal heartbeats or skipped beats. While often not indicative of pathology, it can sometimes be related to heart issues.
-        4. Murmur: Heart murmurs, a "whooshing" or "rumbling" sound occurring between "lub" and "dub" or after "dub," can be a manifestation of heart disease.
-        5. Normal: Normal heart sounds, with a clear "lub dub" without any unusual noise, indicate a healthy heart state.
+        1. Artifact: Tiếng ồn từ môi trường xung quanh hoặc các thiết bị ghi âm.
+        2. Extra Heart Sounds (extrahls): Có thể phản ánh trạng thái bình thường hoặc bất thường của tim, phụ thuộc vào ngữ cảnh cụ thể. Nếu xuất hiện trong các tình huống bình thường, chúng không phải là dấu hiệu của bệnh tim.
+        3. Extrasystole: Ngoại tâm thu, một dấu hiệu của nhịp tim bất thường hoặc nhịp đập hụt. Mặc dù thường không phải là dấu hiệu của bệnh lý nhưng đôi khi nó có thể liên quan đến các vấn đề về tim.
+        4. Murmur: Tiếng thổi của tim, âm thanh "vù vù" hoặc "ầm ầm" xảy ra giữa "lub" và "dub" hoặc sau "dub" có thể là biểu hiện của bệnh tim.
+        5. Normal: Âm thanh tim bình thường, với tiếng "lub dub" rõ ràng, không có tiếng động bất thường, cho thấy trạng thái tim khỏe mạnh.
 
         To start the diagnosis, you just need to follow these steps:
         1. Fill in the necessary personal information.
