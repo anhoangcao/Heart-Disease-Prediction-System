@@ -20,7 +20,7 @@ collection = db['information_heart_keys']  # The collection name
 
 # Paths to your dataset and model
 DATASET_PATH = "data/heart_2020_cleaned.csv"
-LOG_MODEL_PATH = "model/logistic_regression.pkl"
+LOG_MODEL_PATH = "model/voting_classifier.pkl"
 
 def main():
     @st.cache(persist=True)

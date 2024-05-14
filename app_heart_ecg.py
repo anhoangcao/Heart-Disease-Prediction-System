@@ -12,7 +12,7 @@ from datetime import datetime
 # Load model
 @st.cache(allow_output_mutation=True)
 def load_model():
-    model = tf.keras.models.load_model('model/ECG1D-98.h5')
+    model = tf.keras.models.load_model('model/ECG2D.h5')
     return model
 
 model = load_model()
